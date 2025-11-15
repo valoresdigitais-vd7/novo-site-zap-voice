@@ -1,433 +1,383 @@
-import React, { useState, useRef } from 'react';
-import type { Product, Testimonial } from '../types';
-import { PRODUCTS, TESTIMONIALS, FAQ_DATA } from '../constants';
-import { CheckCircleIcon, ZapIcon, ShieldIcon, ChevronDownIcon, UsersIcon, TargetIcon, HeartIcon } from '../components/icons';
 
-// --- SHARED COMPONENTS ---
+import React, { useState } from 'react';
+import { CheckCircleIcon } from '../components/icons';
 
-// InlineCheckoutForm Component
-interface InlineCheckoutFormProps {
-    productName: string;
-}
-const InlineCheckoutForm: React.FC<InlineCheckoutFormProps> = ({ productName }) => {
-    const [email, setEmail] = useState('');
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const [message, setMessage] = useState('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setStatus('loading');
-        setMessage('');
-
-        // Simulate API call for lead generation
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        if (email && email.includes('@')) {
-            setStatus('success');
-            setMessage(`Obrigado! Em breve entraremos em contato para finalizar sua compra do ${productName}.`);
-        } else {
-            setStatus('error');
-            setMessage('Por favor, insira um email válido.');
-        }
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="mt-6">
-            <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Seu melhor email"
-                    required
-                    className="flex-grow px-4 py-3 rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 focus:ring-2 focus:ring-primary focus:outline-none transition-shadow"
-                    disabled={status === 'loading'}
-                />
-                <button
-                    type="submit"
-                    className="bg-secondary hover:bg-secondary-dark text-white font-bold py-3 px-6 rounded-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary disabled:bg-opacity-50 disabled:cursor-not-allowed"
-                    disabled={status === 'loading'}
-                >
-                    {status === 'loading' ? 'Enviando...' : 'Comprar Agora'}
-                </button>
-            </div>
-            {message && (
-                <p className={`mt-3 text-sm ${status === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                    {message}
-                </p>
-            )}
-        </form>
-    );
-};
-
-// --- BLOCK 1: CAPTURA E PROPOSTA DE VALOR ---
+// --- HERO SECTION ---
 
 const HeroSection: React.FC = () => (
-    <section id="hero" className="py-20 md:py-32">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-12 items-center">
-                <div className="text-center max-w-3xl">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-                        A Solução <span className="text-primary dark:text-primary-light">Definitiva</span> para o Seu Negócio
-                    </h1>
-                    <p className="mt-4 text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-                        Aumente sua produtividade, otimize processos e alcance resultados incríveis com nossa plataforma inovadora.
-                    </p>
-                    <div className="max-w-xl mx-auto">
-                        <InlineCheckoutForm productName="Produto Principal" />
-                    </div>
-                    <p className="mt-3 text-xs text-neutral-500">Teste por 7 dias grátis. Cancele quando quiser.</p>
-                </div>
-                <div className="w-full flex justify-center">
-                    <div className="w-full max-w-3xl aspect-video rounded-lg shadow-2xl overflow-hidden">
-                        <iframe
-                            className="w-full h-full"
-                            src="https://www.youtube.com/embed/LXb3EKWsInQ?autoplay=1&mute=1&loop=1&playlist=LXb3EKWsInQ&controls=0&showinfo=0&rel=0"
-                            title="Vídeo de demonstração do produto"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
-// --- BLOCK 2: PROBLEMATIZAÇÃO E SOLUÇÃO ---
-
-const ProblemSolutionSection: React.FC = () => (
-    <section id="problem-solution" className="py-20 bg-neutral-100 dark:bg-neutral-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="bg-white dark:bg-neutral-800/50 p-8 rounded-lg border border-neutral-200 dark:border-neutral-700">
-                    <h2 className="text-3xl font-bold tracking-tight text-red-600 dark:text-red-400">O Problema: Caos e Produtividade Perdida</h2>
-                    <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">
-                        Tarefas se acumulam, prazos são perdidos e a comunicação da equipe é fragmentada. Você sente que está sempre "apagando incêndios" em vez de focar no que realmente importa para crescer?
-                    </p>
-                    <ul className="mt-6 space-y-2 text-neutral-600 dark:text-neutral-400">
-                        <li className="flex items-start"><span className="text-red-500 mr-2 mt-1">❌</span><span>Falta de clareza sobre as prioridades.</span></li>
-                        <li className="flex items-start"><span className="text-red-500 mr-2 mt-1">❌</span><span>Comunicação descentralizada em emails e chats.</span></li>
-                        <li className="flex items-start"><span className="text-red-500 mr-2 mt-1">❌</span><span>Dificuldade em acompanhar o progresso dos projetos.</span></li>
-                    </ul>
-                </div>
-                <div className="bg-primary/5 dark:bg-primary/10 p-8 rounded-lg border border-primary/20">
-                    <h2 className="text-3xl font-bold tracking-tight text-primary dark:text-primary-light">A Solução: Clareza e Controle Total</h2>
-                    <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-300">
-                        Nossa plataforma centraliza suas tarefas, projetos e comunicação, transformando o caos em um fluxo de trabalho organizado e eficiente. Tenha uma visão clara do que precisa ser feito e quem está fazendo.
-                    </p>
-                     <ul className="mt-6 space-y-2 text-neutral-600 dark:text-neutral-300">
-                        <li className="flex items-start"><span className="text-green-500 mr-2 mt-1">✅</span><span>Priorize tarefas com facilidade.</span></li>
-                        <li className="flex items-start"><span className="text-green-500 mr-2 mt-1">✅</span><span>Centralize a comunicação do seu time.</span></li>
-                        <li className="flex items-start"><span className="text-green-500 mr-2 mt-1">✅</span><span>Acompanhe o progresso em tempo real.</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
-// --- BLOCK 3: QUALIFICAÇÃO E BENEFÍCIOS ---
-
-const TargetAudienceSection: React.FC = () => (
-    <section id="target-audience" className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold tracking-tight">Feito para Times que Buscam a Excelência</h2>
-                <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Se você se encaixa em um destes perfis, esta solução foi desenhada para você.</p>
-            </div>
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="bg-neutral-100 dark:bg-neutral-800/50 p-6 rounded-lg shadow-md text-center">
-                    <UsersIcon className="h-10 w-10 mx-auto text-primary mb-4" />
-                    <h3 className="font-semibold text-lg">Gerentes de Projeto</h3>
-                    <p className="text-sm text-neutral-500 mt-1">Centralize projetos, delegue tarefas e monitore o progresso sem esforço.</p>
-                </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800/50 p-6 rounded-lg shadow-md text-center">
-                    <ZapIcon className="h-10 w-10 mx-auto text-primary mb-4" />
-                    <h3 className="font-semibold text-lg">Startups e PMEs</h3>
-                    <p className="text-sm text-neutral-500 mt-1">Organize suas operações, alinhe sua equipe e acelere o crescimento.</p>
-                </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800/50 p-6 rounded-lg shadow-md text-center">
-                    <TargetIcon className="h-10 w-10 mx-auto text-primary mb-4" />
-                    <h3 className="font-semibold text-lg">Agências de Marketing</h3>
-                    <p className="text-sm text-neutral-500 mt-1">Gerencie múltiplos clientes e campanhas em um só lugar, com total visibilidade.</p>
-                </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800/50 p-6 rounded-lg shadow-md text-center">
-                     <HeartIcon className="h-10 w-10 mx-auto text-primary mb-4" />
-                    <h3 className="font-semibold text-lg">Freelancers e Autônomos</h3>
-                    <p className="text-sm text-neutral-500 mt-1">Organize seus projetos, controle seus prazos e impressione seus clientes.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
-const BenefitsSection: React.FC = () => {
-    const benefits = [
-        {
-            icon: <ZapIcon className="h-8 w-8 text-primary" />,
-            title: 'Performance Rápida',
-            description: 'Nossa infraestrutura otimizada garante velocidade e responsividade incomparáveis.'
-        },
-        {
-            icon: <ShieldIcon className="h-8 w-8 text-primary" />,
-            title: 'Segurança de Ponta',
-            description: 'Seus dados estão protegidos com as mais modernas tecnologias de segurança.'
-        },
-        {
-            icon: <CheckCircleIcon className="h-8 w-8 text-primary" />,
-            title: 'Fácil de Usar',
-            description: 'Interface intuitiva e amigável que não requer curva de aprendizado.'
-        }
-    ];
-    return (
-        <section id="benefits" className="py-20 bg-neutral-200 dark:bg-neutral-800">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid md:grid-cols-3 gap-12">
-                     {benefits.map(benefit => (
-                         <div key={benefit.title} className="flex items-start">
-                             <div className="flex-shrink-0 bg-primary/10 p-3 rounded-full">{benefit.icon}</div>
-                             <div className="ml-4">
-                                 <h3 className="text-lg font-semibold">{benefit.title}</h3>
-                                 <p className="mt-1 text-neutral-600 dark:text-neutral-400">{benefit.description}</p>
-                             </div>
-                         </div>
-                     ))}
-                </div>
-            </div>
-        </section>
-    );
-};
-
-// --- BLOCK 4: PROVA SOCIAL E AUTORIDADE ---
-
-const TestimonialsSection: React.FC = () => {
-    const scrollContainer = useRef<HTMLDivElement>(null);
-    return (
-        <section id="testimonials" className="py-20 overflow-hidden">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center">
-                    <h2 className="text-3xl font-bold tracking-tight">O que nossos clientes dizem</h2>
-                    <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Confiança construída com resultados.</p>
-                </div>
-                <div ref={scrollContainer} className="mt-12 flex space-x-8 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-                    {TESTIMONIALS.map((testimonial, index) => (
-                        <div key={index} className="snap-center flex-shrink-0 w-80 md:w-96 bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700">
-                            <p className="text-neutral-600 dark:text-neutral-300 italic">"{testimonial.quote}"</p>
-                            <div className="flex items-center mt-4">
-                                <img src={testimonial.avatarUrl} alt={testimonial.author} className="h-12 w-12 rounded-full object-cover" />
-                                <div className="ml-4">
-                                    <p className="font-semibold">{testimonial.author}</p>
-                                    <p className="text-sm text-neutral-500">{testimonial.role}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
-};
-
-const AuthoritySection: React.FC = () => (
-    <section id="authority" className="py-16 bg-neutral-100 dark:bg-neutral-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 className="text-center text-lg font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-widest">Confiado por grandes empresas</h3>
-            <div className="mt-8 flex justify-center items-center gap-x-8 sm:gap-x-12 flex-wrap">
-                <div className="text-2xl font-bold text-neutral-400 dark:text-neutral-500 my-2">EMPRESA A</div>
-                <div className="text-2xl font-bold text-neutral-400 dark:text-neutral-500 my-2">LOGO B</div>
-                <div className="text-2xl font-bold text-neutral-400 dark:text-neutral-500 my-2">MARCA C</div>
-                <div className="text-2xl font-bold text-neutral-400 dark:text-neutral-500 my-2">CLIENTE D</div>
-                <div className="text-2xl font-bold text-neutral-400 dark:text-neutral-500 my-2">PARCEIRO E</div>
-            </div>
-        </div>
-    </section>
-);
-
-const FounderStorySection: React.FC = () => (
-    <section id="founder-story" className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-12 items-center max-w-5xl mx-auto">
-                <div className="md:col-span-1">
-                     <img src="https://picsum.photos/id/1005/400/400" alt="Fundador da Empresa" className="rounded-full shadow-lg aspect-square object-cover mx-auto" />
-                </div>
-                <div className="md:col-span-2">
-                    <h2 className="text-3xl font-bold tracking-tight">Uma Solução Nascida de uma Necessidade Real</h2>
-                    <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-300">
-                        "Eu era gerente de projetos e sentia na pele a frustração de usar múltiplas ferramentas que não se conversavam. Perdia horas tentando organizar o que era prioridade. Criei o ProdutoX para ser a plataforma que eu sempre quis ter: simples, integrada e focada em resultados."
-                    </p>
-                    <p className="mt-4 font-semibold text-neutral-800 dark:text-neutral-100">João da Silva, Fundador e CEO</p>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
-// --- BLOCK 5: A OFERTA DETALHADA ---
-
-const HowItWorksSection: React.FC = () => {
-    const steps = [
-        { number: '01', title: 'Cadastro Rápido', description: 'Crie sua conta em menos de 60 segundos, sem complicações ou burocracia.' },
-        { number: '02', title: 'Configure sua Plataforma', description: 'Personalize a ferramenta de acordo com as necessidades específicas do seu negócio.' },
-        { number: '03', title: 'Comece a Crescer', description: 'Utilize nossos recursos para otimizar seu trabalho e ver resultados imediatos.' }
-    ];
-
-    return (
-        <section id="how-it-works" className="py-20 bg-neutral-200 dark:bg-neutral-800">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center">
-                    <h2 className="text-3xl font-bold tracking-tight">Como Funciona</h2>
-                    <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Três passos simples para o sucesso.</p>
-                </div>
-                <div className="mt-12 grid md:grid-cols-3 gap-8">
-                    {steps.map(step => (
-                        <div key={step.number} className="text-center p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md">
-                           <div className="text-5xl font-extrabold text-primary dark:text-primary-light mb-4">{step.number}</div>
-                           <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                           <p className="text-neutral-600 dark:text-neutral-400">{step.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
-};
-
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-    <div className={`border rounded-lg p-6 flex flex-col ${product.isFeatured ? 'border-primary dark:border-primary-light ring-2 ring-primary dark:ring-primary-light' : 'border-neutral-300 dark:border-neutral-700'}`}>
-        {product.isFeatured && <div className="text-center mb-4"><span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">MAIS POPULAR</span></div>}
-        <h3 className="text-2xl font-bold text-center">{product.name}</h3>
-        <p className="text-4xl font-extrabold text-center my-4">{product.price}</p>
-        <ul className="space-y-2 mb-6 text-neutral-600 dark:text-neutral-400">
-            {product.features.map(feature => (
-                <li key={feature} className="flex items-center">
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                    <span>{feature}</span>
-                </li>
-            ))}
-        </ul>
-        <button className={`mt-auto w-full font-bold py-3 px-6 rounded-md transition-transform transform hover:scale-105 ${product.isFeatured ? 'bg-primary hover:bg-primary-dark text-white' : 'bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600'}`}>
-            Comprar Agora
-        </button>
+  <section id="hero" className="py-20 md:py-32 bg-neutral-100 dark:bg-neutral-900">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+        Humanize seu WhatsApp: <span className="text-primary dark:text-primary-light">Atenda com Emoção Agora!</span>
+      </h1>
+      <p className="mt-6 text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
+        Automatize seu atendimento e vendas com áudios humanizados e funis inteligentes integrados ao WhatsApp Web.
+      </p>
+      <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="#plans"
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-md transition-transform transform hover:scale-105"
+        >
+          Teste 7 Dias Grátis
+        </a>
+        <a
+          href="#benefits"
+          className="bg-white dark:bg-neutral-800 text-green-600 dark:text-green-400 border border-green-500 font-semibold py-3 px-8 rounded-md transition-transform transform hover:scale-105"
+        >
+          Saiba Mais
+        </a>
+      </div>
+      <p className="mt-3 text-sm text-neutral-500">Sem necessidade de cartão de crédito</p>
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-neutral-600 dark:text-neutral-400 text-sm">
+        <div>💼 500+ empresas utilizando</div>
+        <div>⭐ 95% de satisfação dos usuários</div>
+        <div>💰 R$500K em resultados gerados</div>
+      </div>
     </div>
+  </section>
 );
 
-const InvestmentSection: React.FC = () => (
-    <section id="investment" className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight">Um Investimento Inteligente no Seu Crescimento</h2>
-                <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Escolha o plano perfeito para você. Sem taxas escondidas.</p>
-            </div>
-            <div className="mt-12 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                {PRODUCTS.map(product => <ProductCard key={product.id} product={product} />)}
-            </div>
+// --- SOCIAL PROOF IMEDIATO ---
+
+const SocialProofSection: React.FC = () => (
+  <section id="social-proof" className="py-20">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="flex justify-center gap-8 flex-wrap items-center">
+        <div className="text-2xl font-semibold text-neutral-500">StartUp Hub</div>
+        <div className="text-2xl font-semibold text-neutral-500">ConectaCRM</div>
+        <div className="text-2xl font-semibold text-neutral-500">TechSales</div>
+        <div className="text-2xl font-semibold text-neutral-500">VendaFácil</div>
+      </div>
+      <div className="mt-8 max-w-3xl mx-auto bg-neutral-50 dark:bg-neutral-800 p-8 rounded-lg shadow-md">
+        <p className="italic text-neutral-700 dark:text-neutral-200">
+          “ZapVoice transformou nosso atendimento: a combinação de automação com áudios realistas nos aproximou diretamente
+          dos clientes, elevando nossa conversão em tempo recorde.”
+        </p>
+        <p className="mt-4 font-semibold">— Mariana Souza, Gerente de Vendas</p>
+        <p className="text-sm text-green-600 mt-1">Aumento de conversão em 150%</p>
+      </div>
+    </div>
+  </section>
+);
+
+// --- BENEFÍCIOS PRINCIPAIS ---
+
+const BenefitsSection: React.FC = () => (
+  <section id="benefits" className="py-20 bg-neutral-100 dark:bg-neutral-900">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">Funcionalidades Principais</h2>
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <div className="text-4xl mb-4">🎤</div>
+          <h3 className="font-semibold text-lg">Áudios que Encantam Clientes</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Envie mensagens pré-gravadas que simulam o áudio real, aproximando sua comunicação e evitando a frieza dos
+            robôs.
+          </p>
+          <a href="#" className="text-green-500 hover:text-green-600 mt-3 inline-block text-sm font-medium">
+            Saiba como →
+          </a>
         </div>
-    </section>
-);
-
-
-// --- BLOCK 6: FECHAMENTO E REVERSÃO DE RISCO ---
-
-const GuaranteeSection: React.FC = () => (
-     <section id="guarantee" className="py-20 bg-neutral-100 dark:bg-neutral-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto bg-white dark:bg-neutral-800 border-2 border-dashed border-primary dark:border-primary-light rounded-lg p-8 text-center">
-                <ShieldIcon className="h-16 w-16 mx-auto text-primary mb-4" />
-                <h2 className="text-3xl font-bold tracking-tight">Sua Satisfação ou Seu Dinheiro de Volta</h2>
-                <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-300">
-                    Temos tanta confiança na nossa plataforma que oferecemos uma garantia incondicional de 7 dias. Se por qualquer motivo você não ficar 100% satisfeito, basta nos avisar e nós reembolsaremos seu investimento integralmente. Sem perguntas, sem burocracia. O risco é todo nosso.
-                </p>
-            </div>
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <div className="text-4xl mb-4">⏱️</div>
+          <h3 className="font-semibold text-lg">Automatização Inteligente</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Implemente funis automáticos com gatilhos e intervalos programados para um fluxo de atendimento contínuo e
+            preciso.
+          </p>
+          <a href="#" className="text-green-500 hover:text-green-600 mt-3 inline-block text-sm font-medium">
+            Ver benefícios →
+          </a>
         </div>
-    </section>
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <div className="text-4xl mb-4">🔌</div>
+          <h3 className="font-semibold text-lg">Integração Simples e Rápida</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Instale a extensão oficial para Google Chrome e comece a operar com atualizações automáticas e suporte
+            dedicado.
+          </p>
+          <a href="#" className="text-green-500 hover:text-green-600 mt-3 inline-block text-sm font-medium">
+            Confira instalação →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 );
 
-const CTASection: React.FC = () => (
-    <section id="cta" className="py-20 bg-primary">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-extrabold text-white">Pronto para Transformar Seu Negócio?</h2>
-            <p className="mt-2 text-lg text-cyan-100 max-w-2xl mx-auto">Junte-se a milhares de empresas que já estão crescendo com a nossa plataforma. Comece seu teste gratuito hoje mesmo.</p>
-            <a href="#hero" className="mt-8 inline-block bg-white text-primary font-bold py-3 px-8 rounded-md transition-transform transform hover:scale-105 shadow-lg">
-                Começar Agora
-            </a>
+// --- COMO FUNCIONA ---
+
+const HowItWorksSection: React.FC = () => (
+  <section id="how" className="py-20">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        Como Humanizar seu WhatsApp em 3 Passos
+      </h2>
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="p-6 rounded-lg bg-white dark:bg-neutral-800 shadow-md">
+          <div className="text-5xl mb-2">⬇️</div>
+          <h3 className="font-semibold text-lg">1. Instale a Extensão</h3>
+          <p className="text-neutral-600 dark:text-neutral-400 mt-2">
+            Adicione o ZapVoice ao seu Chrome com um clique e fique pronto para transformar seu atendimento.
+          </p>
         </div>
-    </section>
+        <div className="p-6 rounded-lg bg-white dark:bg-neutral-800 shadow-md">
+          <div className="text-5xl mb-2">🎙️</div>
+          <h3 className="font-semibold text-lg">2. Configure seus Áudios</h3>
+          <p className="text-neutral-600 dark:text-neutral-400 mt-2">
+            Personalize os áudios humanizados de acordo com sua marca e perfil do cliente, garantindo uma abordagem única.
+          </p>
+        </div>
+        <div className="p-6 rounded-lg bg-white dark:bg-neutral-800 shadow-md">
+          <div className="text-5xl mb-2">🚀</div>
+          <h3 className="font-semibold text-lg">3. Automatize e Conquiste</h3>
+          <p className="text-neutral-600 dark:text-neutral-400 mt-2">
+            Ative os funis automáticos e veja a comunicação fluir com a naturalidade de um atendimento real.
+          </p>
+        </div>
+      </div>
+      <p className="mt-8 text-lg text-neutral-600 dark:text-neutral-400">
+        Transforme seu atendimento e aumente as vendas com comunicação automatizada, mas sempre humana.
+      </p>
+    </div>
+  </section>
 );
+
+// --- RECURSOS EXCLUSIVOS ---
+
+const ResourcesSection: React.FC = () => (
+  <section id="resources" className="py-20 bg-neutral-100 dark:bg-neutral-900">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold text-neutral-900 dark:text-white">Explore Nossos Recursos Exclusivos</h2>
+      <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+        Materiais gratuitos que comprovam a eficácia do ZapVoice
+      </p>
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <h3 className="font-semibold text-lg">E-book: Estratégias de Venda no WhatsApp</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Aprenda táticas infalíveis para escalar seu atendimento e vender mais.
+          </p>
+          <a href="#" className="mt-3 inline-block text-green-500 font-medium">
+            Baixar agora →
+          </a>
+        </div>
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <h3 className="font-semibold text-lg">Checklist: Automatize seu Atendimento</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Identifique os principais pontos para uma comunicação eficiente e personalizada.
+          </p>
+          <a href="#" className="mt-3 inline-block text-green-500 font-medium">
+            Baixar checklist →
+          </a>
+        </div>
+        <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
+          <h3 className="font-semibold text-lg">Guia Rápido: Personalize seus Áudios</h3>
+          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            Dicas práticas para gravar áudios que realmente conectam com seus clientes.
+          </p>
+          <a href="#" className="mt-3 inline-block text-green-500 font-medium">
+            Ler guia →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+// --- CTA INTERMEDIÁRIO ---
+
+const MidCTASection: React.FC = () => (
+  <section id="cta-mid" className="py-20 bg-green-500 text-white text-center">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h3 className="text-3xl font-bold">Pronto para dar o próximo passo e humanizar seu WhatsApp?</h3>
+      <a
+        href="#plans"
+        className="mt-8 inline-block bg-white text-green-600 font-bold py-3 px-8 rounded-md shadow-md hover:scale-105 transition-transform"
+      >
+        Teste 7 Dias Grátis
+      </a>
+      <p className="mt-2 text-white/90 text-sm">Sem cartão de crédito</p>
+    </div>
+  </section>
+);
+
+// --- COMPARAÇÃO ---
+
+const ComparisonSection: React.FC = () => (
+  <section id="comparison" className="py-20">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold text-neutral-900 dark:text-white">Por que ZapVoice é Diferente?</h2>
+      <div className="mt-10 overflow-x-auto">
+        <table className="min-w-full border border-neutral-300 dark:border-neutral-700 text-left text-neutral-700 dark:text-neutral-300">
+          <thead>
+            <tr>
+              <th className="border-b p-3 font-semibold">Abordagem Tradicional</th>
+              <th className="border-b p-3 font-semibold">ZapVoice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="border-b p-3">❌ Mensagens frias e robóticas</td>
+              <td className="border-b p-3">✅ Áudios humanizados e realistas</td>
+            </tr>
+            <tr>
+              <td className="border-b p-3">❌ Falta de personalização</td>
+              <td className="border-b p-3">✅ Simulação de “gravando...” e “digitando...”</td>
+            </tr>
+            <tr>
+              <td className="p-3">❌ Instalação complexa</td>
+              <td className="p-3">✅ Extensão simples e atualizada</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+);
+
+// --- DEPOIMENTOS EM GRID ---
+
+const TestimonialsSection: React.FC = () => (
+  <section id="testimonials" className="py-20 bg-neutral-100 dark:bg-neutral-900">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold text-neutral-900 dark:text-white">O que Nossos Usuários Dizem</h2>
+      <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+        Casos reais: resultados rápidos, superação de desafios e grandes conquistas
+      </p>
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            text: 'Com o ZapVoice, conseguimos uma integração perfeita entre automação e personalização. Meus clientes se surpreenderam com o toque humano!',
+            author: 'João M., Empresário',
+            result: 'Primeiro atendimento com 95% de aprovação',
+          },
+          {
+            text: 'O diferencial dos áudios humanizados fez toda a diferença. Vimos um aumento de 120% nas conversões em poucas semanas.',
+            author: 'Ana P., Marketing Digital',
+            result: 'Conversão nas vendas disparou',
+          },
+          {
+            text: 'Eu achava que automação e humanização não combinavam, mas o ZapVoice mudou esse cenário. Recomendo fortemente!',
+            author: 'Carlos R., Gestor de Vendas',
+            result: 'Aumento de 150% na fidelização de clientes',
+          },
+          {
+            text: 'Rapidez e eficiência com um toque pessoal. O ZapVoice revolucionou a forma como nos comunicamos pelo WhatsApp.',
+            author: 'Fernanda L., Consultora de Vendas',
+            result: 'Resposta instantânea e humanizada',
+          },
+          {
+            text: 'Resultados expressivos em poucos dias. A ferramenta é intuitiva e o suporte é exemplar!',
+            author: 'Marcos S., Empreendedor Digital',
+            result: 'Atendimento 24/7 com alta qualidade',
+          },
+          {
+            text: 'Finalmente uma ferramenta que traz proximidade mesmo em atendimento automatizado. Meus clientes se sentem valorizados!',
+            author: 'Luana D., Coordenadora de CRM',
+            result: 'Fidelização e aumento de engajamento',
+          },
+        ].map((t, i) => (
+          <div key={i} className="bg-white dark:bg-neutral-800 p-6 rounded-lg text-left shadow-md">
+            <div className="text-yellow-400 mb-3">★★★★★</div>
+            <p className="italic text-neutral-700 dark:text-neutral-200">“{t.text}”</p>
+            <p className="mt-4 font-semibold">{t.author}</p>
+            <p className="text-sm text-green-600 mt-1">{t.result}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// --- FAQ ---
 
 const FAQSection: React.FC = () => {
-    const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const faqs = [
+    {
+      q: 'Como faço para instalar o ZapVoice?',
+      a: 'A extensão é simples de instalar no Google Chrome. Basta clicar no link, adicionar e em instantes estará pronta para operar.',
+    },
+    {
+      q: 'O ZapVoice é compatível com todas as versões do WhatsApp Web?',
+      a: 'Sim, nosso produto foi desenvolvido para funcionar com a versão mais recente do WhatsApp Web, garantindo compatibilidade máxima.',
+    },
+    {
+      q: 'Posso personalizar os áudios conforme minha marca?',
+      a: 'Com certeza! Você pode gravar mensagens personalizadas e configurar funis automáticos de acordo com a identidade e necessidades do seu negócio.',
+    },
+    {
+      q: 'Existe integração com outras plataformas?',
+      a: 'Atualmente, o ZapVoice integra-se ao WhatsApp Web, mas estamos sempre em desenvolvimento para futuras integrações.',
+    },
+    {
+      q: 'Como funciona o teste gratuito de 7 dias?',
+      a: 'Basta clicar em "Teste 7 Dias Grátis", sem necessidade de cartão de crédito, e aproveitar todos os recursos durante esse período.',
+    },
+  ];
 
-    const toggleFAQ = (index: number) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
+  const [open, setOpen] = useState<number | null>(null);
 
-    return (
-        <section id="faq" className="py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold tracking-tight">Ainda tem Dúvidas?</h2>
-                     <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Respostas para as perguntas mais comuns.</p>
-                </div>
-                <div className="space-y-4">
-                    {FAQ_DATA.map((item, index) => (
-                        <div key={index} className="bg-neutral-100 dark:bg-neutral-800/50 rounded-lg shadow-sm">
-                            <button
-                                onClick={() => toggleFAQ(index)}
-                                className="w-full flex justify-between items-center p-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-                                aria-expanded={openIndex === index}
-                                aria-controls={`faq-answer-${index}`}
-                            >
-                                <span className="text-md font-medium text-neutral-800 dark:text-neutral-100">{item.question}</span>
-                                <ChevronDownIcon
-                                    className={`h-5 w-5 text-neutral-500 transform transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
-                                />
-                            </button>
-                            <div
-                                id={`faq-answer-${index}`}
-                                className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}
-                            >
-                                <div className="px-5 pb-5">
-                                    <p className="text-neutral-600 dark:text-neutral-300">{item.answer}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+  return (
+    <section id="faq" className="py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
+        <h2 className="text-3xl font-bold text-neutral-900 dark:text-white text-center mb-12">Dúvidas Frequentes</h2>
+        {faqs.map((f, i) => (
+          <div key={i} className="mb-4 bg-neutral-100 dark:bg-neutral-800 rounded-md">
+            <button
+              className="w-full text-left p-4 font-medium flex justify-between items-center"
+              onClick={() => setOpen(open === i ? null : i)}
+            >
+              {f.q}
+              <span>{open === i ? '–' : '+'}</span>
+            </button>
+            {open === i && <p className="px-4 pb-4 text-neutral-600 dark:text-neutral-300">{f.a}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 };
 
-// --- FINAL PAGE COMPONENT ---
+// --- CTA FINAL ---
+
+const FinalCTASection: React.FC = () => (
+  <section id="cta-final" className="py-20 bg-green-600 text-white text-center">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 className="text-3xl font-bold">Pronto para humanizar e escalar suas vendas no WhatsApp?</h2>
+      <p className="mt-2 text-lg text-green-100">
+        Não perca mais tempo com mensagens frias – transforme seu atendimento com ZapVoice!
+      </p>
+      <a
+        href="#plans"
+        className="mt-8 inline-block bg-white text-green-600 font-bold py-3 px-8 rounded-md shadow-md hover:scale-105 transition-transform"
+      >
+        Assine Agora →
+      </a>
+      <div className="mt-8 text-sm space-y-1 text-green-100">
+        <p>✅ Garantia: 7 dias grátis sem riscos</p>
+        <p>💬 Suporte: Atendimento direto via WhatsApp</p>
+        <p>🤝 Comunidade: Mais de 500 empresas confiando na solução</p>
+      </div>
+    </div>
+  </section>
+);
+
+// --- PAGE COMPONENT ---
 
 const LandingPage: React.FC = () => {
   return (
     <>
-      {/* Bloco 1: Captura e Proposta de Valor */}
       <HeroSection />
-      
-      {/* Bloco 2: Problematização e Solução */}
-      <ProblemSolutionSection />
-      
-      {/* Bloco 3: Qualificação e Benefícios */}
-      <TargetAudienceSection />
+      <SocialProofSection />
       <BenefitsSection />
-      
-      {/* Bloco 4: Prova Social e Autoridade */}
-      <TestimonialsSection />
-      <AuthoritySection />
-      <FounderStorySection />
-      
-      {/* Bloco 5: A Oferta Detalhada */}
       <HowItWorksSection />
-      <InvestmentSection />
-      
-      {/* Bloco 6: Fechamento e Reversão de Risco */}
-      <GuaranteeSection />
-      <CTASection />
+      <ResourcesSection />
+      <MidCTASection />
+      <ComparisonSection />
+      <TestimonialsSection />
       <FAQSection />
+      <FinalCTASection />
     </>
   );
 };
