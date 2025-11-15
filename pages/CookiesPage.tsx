@@ -1,3 +1,4 @@
+tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -30,19 +31,30 @@ const CookiesPage: React.FC = () => {
         <>
             <LegalPageLayout title="Política de Cookies" lastUpdated="1 de Janeiro de 2024">
                 <h2>1. O que são cookies?</h2>
-                <p>Cookies são pequenos arquivos de texto que são armazenados em seu computador ou dispositivo móvel quando você visita um site...</p>
-                
-                <h2>2. Como usamos os cookies?</h2>
-                <p>Usamos cookies para entender como você usa nosso site e para melhorar sua experiência. Isso inclui a personalização de conteúdo e publicidade...</p>
+                <p>Cookies são pequenos arquivos de texto que um site armazena em seu computador, smartphone ou outro dispositivo quando você o visita. Eles servem para reconhecer o seu dispositivo e armazenar algumas informações sobre suas preferências ou ações anteriores.</p>
 
-                <h2>3. Tipos de Cookies que Usamos</h2>
+                <h2>2. Como usamos os cookies?</h2>
+                <p>No ZapVoice, utilizamos cookies para melhorar a navegação, oferecer uma experiência personalizada e analisar o desempenho do site. Os cookies nos ajudam a entender como os visitantes interagem com nossas páginas e como podemos otimizar nosso conteúdo e serviços.</p>
+
+                <h2>3. Tipos de cookies que usamos</h2>
                 <ul>
-                    <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento do site.</li>
-                    <li><strong>Cookies de Desempenho:</strong> Coletam informações sobre como os visitantes usam o site.</li>
-                    <li><strong>Cookies de Funcionalidade:</strong> Lembram as escolhas que você faz.</li>
+                    <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento básico do site e para permitir que você navegue e use suas funcionalidades.</li>
+                    <li><strong>Cookies de Desempenho:</strong> Coletam informações sobre como os visitantes usam o site, como páginas mais visitadas e possíveis erros.</li>
+                    <li><strong>Cookies de Funcionalidade:</strong> Memorizam suas preferências e escolhas (como nome de usuário, idioma ou região), proporcionando uma experiência mais personalizada.</li>
+                    <li><strong>Cookies de Marketing:</strong> Usados para exibir anúncios relevantes e avaliar a eficácia das campanhas de marketing.</li>
                 </ul>
-                
-                <p>... (Conteúdo completo da política de cookies aqui)</p>
+
+                <h2>4. Gerenciamento de cookies</h2>
+                <p>Você pode optar por aceitar ou recusar cookies ao visitar nosso site. A maioria dos navegadores aceita cookies automaticamente, mas você pode modificar as configurações para recusá-los, se preferir. No entanto, isso pode impactar a funcionalidade de algumas partes do site.</p>
+
+                <h2>5. Cookies de terceiros</h2>
+                <p>Podemos utilizar cookies de terceiros (como Google Analytics) para coletar dados estatísticos e melhorar nossos serviços. Esses cookies são gerenciados por terceiros e seguem suas próprias políticas de privacidade.</p>
+
+                <h2>6. Alterações nesta política</h2>
+                <p>Podemos atualizar esta Política de Cookies periodicamente para refletir mudanças em nossas práticas ou por outros motivos operacionais, legais ou regulamentares. Recomendamos que você revise esta página regularmente.</p>
+
+                <h2>7. Contato</h2>
+                <p>Se tiver dúvidas sobre esta Política de Cookies, entre em contato conosco pelo suporte oficial do ZapVoice via WhatsApp ou pelos canais informados em nosso site <a href="https://zp.valoresdigitais.com" target="_blank" rel="noopener noreferrer">zp.valoresdigitais.com</a>.</p>
             </LegalPageLayout>
             <CookieConsentBanner />
         </>
